@@ -1,62 +1,901 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BEARDUST // SYSTEM: DOOM</title>
-    <!-- Load js-dos CSS -->
-    <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css">
+    <title>ARKTOS Global Enterprises | Gnáthos Tower Command</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        babyblue: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0284c7',
+                            600: '#026597',
+                            900: '#075985'
+                        },
+                        arktos: {
+                            navy: '#0f172a',
+                            slate: '#1e293b',
+                            muted: '#475569',
+                            card: 'rgba(255, 255, 255, 0.88)',
+                            border: '#cbd5e1'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        body {
-            background-color: #050505;
-            color: #00ff66;
-            font-family: 'Courier New', Courier, monospace;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
+        /* Custom scrollbar styled in baby blue */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-        h1 {
-            font-size: 1.8rem;
-            letter-spacing: 3px;
-            margin-bottom: 5px;
-            text-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
+        ::-webkit-scrollbar-track {
+            background: #e0f2fe;
         }
-        p {
-            color: #888;
-            font-size: 0.9rem;
-            margin-top: 0;
-            margin-bottom: 20px;
+        ::-webkit-scrollbar-thumb {
+            background: #7dd3fc;
+            border-radius: 4px;
         }
-        #doom-container {
-            width: 640px;
-            height: 400px;
-            border: 2px solid #00ff66;
-            box-shadow: 0 0 25px rgba(0, 255, 102, 0.2);
-            background: #000;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+        }
+
+        /* Fixed full-screen canvas background for scroll parallax */
+        #scroll-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Rapid Involuntary Vertical Shoulder Shrugging / Twitching for The Diggle Specimen */
+        @keyframes diggle-shoulder-twitch-left {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            15% { transform: translateY(-22px) rotate(-4deg); }
+            35% { transform: translateY(4px) rotate(1deg); }
+            55% { transform: translateY(-18px) rotate(-3deg); }
+            75% { transform: translateY(2px) rotate(0deg); }
+            90% { transform: translateY(-20px) rotate(-2deg); }
+        }
+
+        @keyframes diggle-shoulder-twitch-right {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            20% { transform: translateY(-24px) rotate(4deg); }
+            40% { transform: translateY(5px) rotate(-2deg); }
+            60% { transform: translateY(-19px) rotate(3deg); }
+            80% { transform: translateY(3px) rotate(0deg); }
+        }
+
+        .twitch-active-left {
+            animation: diggle-shoulder-twitch-left var(--twitch-speed, 0.12s) infinite ease-in-out;
+            transform-origin: 100px 170px;
+        }
+
+        .twitch-active-right {
+            animation: diggle-shoulder-twitch-right var(--twitch-speed, 0.13s) infinite ease-in-out;
+            transform-origin: 180px 170px;
+        }
+
+        /* Clean Minimalist Glassmorphism Panels */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(203, 213, 225, 0.8);
+            box-shadow: 0 4px 20px -2px rgba(2, 132, 199, 0.05);
+        }
+
+        .glass-panel-dark {
+            background: rgba(15, 23, 42, 0.94);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(51, 65, 85, 0.8);
+            box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.3);
+        }
+
+        /* Horizontal Ticker Animation */
+        @keyframes ticker-slide {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-ticker {
+            display: inline-flex;
+            white-space: nowrap;
+            animation: ticker-slide 35s linear infinite;
+        }
+        .animate-ticker:hover {
+            animation-play-state: paused;
         }
     </style>
 </head>
-<body>
+<body class="bg-babyblue-100 text-arktos-slate font-sans antialiased relative selection:bg-babyblue-300 selection:text-arktos-navy">
 
-    <h1>BEARDUST.SYS // DOOM_EXECUTABLE</h1>
-    <p>STATUS: ONLINE</p>
+    <!-- Dynamic Scroll Canvas Background -->
+    <canvas id="scroll-canvas"></canvas>
 
-    <!-- The container where Doom will run -->
-    <div id="doom-container"></div>
+    <!-- Top System Ticker Bar -->
+    <div class="relative z-50 bg-arktos-navy text-babyblue-200 border-b border-slate-800 text-[11px] font-mono py-1.5 overflow-hidden">
+        <div class="animate-ticker flex items-center gap-10">
+            <span><strong class="text-white">GNÁTHOS TOWER:</strong> CLEARING NOMINAL [LATENCY: 0.003ms]</span>
+            <span><strong class="text-white">PROJECT DIGGLE:</strong> CONTAINER ISOLATION 100%</span>
+            <span><strong class="text-white">FRENCH FRY DIVISION:</strong> 12,000 TONS FLASH-FROZEN / HR</span>
+            <span><strong class="text-white">ARKTOS HOOPS:</strong> LEAGUE STANDING #1</span>
+            <span><strong class="text-white">MARMALADE YIELD:</strong> GRADE-A CITRUS PASS RATE 99.8%</span>
+            <span><strong class="text-white">TRI-CEO COUNCIL:</strong> IN SESSION [TIMOTHEUS, PAREIÁ, ARKTOS]</span>
+            <!-- Repeated for seamless loop -->
+            <span><strong class="text-white">GNÁTHOS TOWER:</strong> CLEARING NOMINAL [LATENCY: 0.003ms]</span>
+            <span><strong class="text-white">PROJECT DIGGLE:</strong> CONTAINER ISOLATION 100%</span>
+            <span><strong class="text-white">FRENCH FRY DIVISION:</strong> 12,000 TONS FLASH-FROZEN / HR</span>
+            <span><strong class="text-white">ARKTOS HOOPS:</strong> LEAGUE STANDING #1</span>
+            <span><strong class="text-white">MARMALADE YIELD:</strong> GRADE-A CITRUS PASS RATE 99.8%</span>
+            <span><strong class="text-white">TRI-CEO COUNCIL:</strong> IN SESSION [TIMOTHEUS, PAREIÁ, ARKTOS]</span>
+        </div>
+    </div>
 
-    <!-- Load js-dos JavaScript -->
-    <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
+    <header class="sticky top-0 z-40 glass-panel border-b border-babyblue-200/80 px-6 md:px-12 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-4">
+            
+            <!-- ARKTOS Exact Geometric Logo SVG -->
+            <a href="#" class="focus:outline-none flex items-center gap-3 group" title="ARKTOS Global Enterprises">
+                <svg width="260" height="38" viewBox="0 0 280 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-8 md:h-9 w-auto">
+                    <g fill="#0F172A" class="group-hover:fill-sky-900 transition-colors">
+                        <!-- 'A' with sharp chamfered top and triangular notch -->
+                        <path d="M 0 42 L 0 10 L 10 0 L 32 0 L 42 10 L 42 42 L 30 42 L 30 26 L 12 26 L 12 42 Z M 12 16 L 30 16 L 30 10 L 12 10 Z" />
+                        <!-- 'R' with angular diagonal leg -->
+                        <path d="M 46 42 L 46 0 L 78 0 L 88 10 L 88 22 L 76 26 L 88 42 L 74 42 L 64 26 L 58 26 L 58 42 Z M 58 16 L 74 16 L 74 10 L 58 10 Z" />
+                        <!-- 'K' with distinct chamfered joint -->
+                        <path d="M 92 42 L 92 0 L 104 0 L 104 16 L 122 0 L 136 0 L 118 18 L 136 42 L 122 42 L 104 22 L 104 42 Z" />
+                        <!-- 'T' with geometric top bar -->
+                        <path d="M 140 10 L 140 0 L 180 0 L 180 10 L 166 10 L 166 42 L 154 42 L 154 10 Z" />
+                        <!-- Top notch mark on T -->
+                        <path d="M 162 -2 L 170 -8 L 176 -8 L 170 -2 Z" fill="#0284C7"/>
+                        <!-- 'O' octagonal -->
+                        <path d="M 184 10 L 194 0 L 216 0 L 226 10 L 226 32 L 216 42 L 194 42 L 184 32 Z M 196 32 L 214 32 L 214 10 L 196 10 Z" />
+                        <!-- 'S' octagonal geometry -->
+                        <path d="M 230 32 L 240 42 L 272 42 L 272 24 L 242 24 L 242 10 L 272 10 L 272 0 L 230 0 L 230 18 L 260 18 L 260 32 Z" />
+                    </g>
+                </svg>
+            </a>
+
+            <!-- Corporate Navigation Menu -->
+            <nav class="flex flex-wrap items-center justify-center gap-6 text-xs font-mono tracking-wider uppercase text-slate-600">
+                <a href="#overview" class="hover:text-arktos-navy transition-colors">Overview</a>
+                <a href="#ceos" class="hover:text-arktos-navy transition-colors">Tri-CEO Council</a>
+                <a href="#banking" class="hover:text-arktos-navy transition-colors">Gnáthos Banking</a>
+                <a href="#diggle" class="hover:text-arktos-navy transition-colors">Project Diggle</a>
+                <a href="#manufacturing" class="hover:text-arktos-navy transition-colors">Manufacturing</a>
+                <a href="#athletics" class="hover:text-arktos-navy transition-colors">Basketball</a>
+                <a href="#investors" class="px-3 py-1 bg-babyblue-500 text-white rounded hover:bg-babyblue-600 transition-colors font-semibold">Investor Portal</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section with Prominent Main Title SVG Logo -->
+    <section id="overview" class="relative z-10 pt-16 pb-20 px-6 md:px-12 border-b border-babyblue-200">
+        <div class="max-w-6xl mx-auto text-center md:text-left">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/90 border border-babyblue-300 text-xs font-mono text-sky-900 mb-8 shadow-sm">
+                <span class="w-2.5 h-2.5 rounded-full bg-babyblue-500 animate-pulse"></span>
+                SOVEREIGN ENTERPRISE MATRIX // CONGLOMERATE HOLDINGS
+            </div>
+
+            <!-- Prominent Title Displaying Exact ARKTOS Logo SVG -->
+            <div class="mb-8">
+                <span class="text-xs font-mono uppercase text-slate-500 tracking-widest block mb-2">// GLOBAL HEADQUARTERS DIRECTIVE</span>
+                <svg width="600" height="90" viewBox="0 0 280 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full max-w-2xl h-auto">
+                    <g fill="#0F172A">
+                        <path d="M 0 42 L 0 10 L 10 0 L 32 0 L 42 10 L 42 42 L 30 42 L 30 26 L 12 26 L 12 42 Z M 12 16 L 30 16 L 30 10 L 12 10 Z" />
+                        <path d="M 46 42 L 46 0 L 78 0 L 88 10 L 88 22 L 76 26 L 88 42 L 74 42 L 64 26 L 58 26 L 58 42 Z M 58 16 L 74 16 L 74 10 L 58 10 Z" />
+                        <path d="M 92 42 L 92 0 L 104 0 L 104 16 L 122 0 L 136 0 L 118 18 L 136 42 L 122 42 L 104 22 L 104 42 Z" />
+                        <path d="M 140 10 L 140 0 L 180 0 L 180 10 L 166 10 L 166 42 L 154 42 L 154 10 Z" />
+                        <path d="M 162 -2 L 170 -8 L 176 -8 L 170 -2 Z" fill="#0284C7"/>
+                        <path d="M 184 10 L 194 0 L 216 0 L 226 10 L 226 32 L 216 42 L 194 42 L 184 32 Z M 196 32 L 214 32 L 214 10 L 196 10 Z" />
+                        <path d="M 230 32 L 240 42 L 272 42 L 272 24 L 242 24 L 242 10 L 272 10 L 272 0 L 230 0 L 230 18 L 260 18 L 260 32 Z" />
+                    </g>
+                </svg>
+            </div>
+            
+            <h1 class="text-3xl sm:text-5xl md:text-6xl font-light tracking-tight text-arktos-navy mb-6 leading-tight">
+                Architecting Sovereign Wealth, Bio-Defense, <br class="hidden sm:inline"/>
+                &amp; <span class="font-semibold text-sky-900">Global Industrial Production.</span>
+            </h1>
+
+            <p class="text-base md:text-lg text-slate-600 max-w-3xl font-light leading-relaxed mb-10">
+                ARKTOS is a multi-sector megacorporation anchoring institutional private banking at Gnáthos Tower, engineering advanced neuromuscular bio-agents ("The Diggle"), driving global French Fry potato processing and confectionery fabrication, and managing championship professional basketball operations.
+            </p>
+
+            <!-- Key Quick Metrics -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-8 border-t border-babyblue-300/60 text-xs font-mono">
+                <div class="glass-panel p-4 rounded-sm">
+                    <span class="text-slate-500 block uppercase mb-1">Financial Citadel</span>
+                    <span class="text-arktos-navy font-semibold text-sm">Gnáthos Tower</span>
+                </div>
+                <div class="glass-panel p-4 rounded-sm">
+                    <span class="text-slate-500 block uppercase mb-1">Bio-Defense Vector</span>
+                    <span class="text-arktos-navy font-semibold text-sm">Project Diggle</span>
+                </div>
+                <div class="glass-panel p-4 rounded-sm">
+                    <span class="text-slate-500 block uppercase mb-1">Board Governance</span>
+                    <span class="text-arktos-navy font-semibold text-sm">3 Bear Co-CEOs</span>
+                </div>
+                <div class="glass-panel p-4 rounded-sm">
+                    <span class="text-slate-500 block uppercase mb-1">Food Logistics</span>
+                    <span class="text-sky-800 font-semibold text-sm">French Fries &amp; Confections</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="relative z-10 max-w-6xl mx-auto px-6 md:px-12 py-20 space-y-32">
+
+        <!-- SECTION 1: TRI-CEO EXECUTIVE COUNCIL (BEARS IN TAILORED SUITS) -->
+        <section id="ceos" class="scroll-mt-28">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-2.5 h-6 bg-babyblue-500 rounded-full"></div>
+                <h2 class="text-xs font-mono uppercase tracking-widest text-sky-900 font-semibold">Tri-CEO Board of Directors</h2>
+            </div>
+            <h3 class="text-3xl md:text-4xl font-light text-arktos-navy mb-4">
+                Executive Command Council
+            </h3>
+            <p class="text-sm text-slate-600 max-w-2xl font-light mb-12">
+                Governed conjointly by three distinguished executive polar bears in custom-tailored suits, ARKTOS operates with triple-redundant leadership across finance, bio-defense, and global manufacturing.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- CEO 1: Timotheus -->
+                <div class="glass-panel p-6 rounded-sm shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                    <div>
+                        <!-- Tailored Suit Polar Bear SVG Portrait -->
+                        <div class="w-full h-52 mb-6 bg-gradient-to-b from-babyblue-50 to-babyblue-100/60 rounded-sm p-2 border border-babyblue-200 flex items-center justify-center overflow-hidden">
+                            <svg viewBox="0 0 200 220" class="w-full h-full">
+                                <!-- Ears -->
+                                <circle cx="55" cy="50" r="24" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/>
+                                <circle cx="55" cy="50" r="14" fill="#bae6fd"/>
+                                <circle cx="145" cy="50" r="24" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/>
+                                <circle cx="145" cy="50" r="14" fill="#bae6fd"/>
+                                <!-- Head -->
+                                <ellipse cx="100" cy="85" rx="55" ry="48" fill="#f8fafc" stroke="#cbd5e1" stroke-width="3"/>
+                                <!-- Snout -->
+                                <ellipse cx="100" cy="98" rx="22" ry="16" fill="#f1f5f9"/>
+                                <ellipse cx="100" cy="92" rx="10" ry="7" fill="#0284c7"/> <!-- Baby Blue Nose -->
+                                <!-- Eyes -->
+                                <circle cx="80" cy="78" r="4" fill="#0f172a"/>
+                                <circle cx="120" cy="78" r="4" fill="#0f172a"/>
+                                <!-- Tailored Navy Suit -->
+                                <path d="M 35 220 L 35 150 L 100 132 L 165 150 L 165 220 Z" fill="#0f172a"/>
+                                <path d="M 80 137 L 100 220 L 120 137 Z" fill="#ffffff"/> <!-- White Dress Shirt -->
+                                <polygon points="100,138 108,180 100,212 92,180" fill="#38bdf8"/> <!-- Baby Blue Executive Tie -->
+                                <path d="M 35 150 L 82 220 M 165 150 L 118 220" stroke="#1e293b" stroke-width="2.5"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-mono text-sky-800 font-semibold uppercase tracking-wider block mb-1">CO-CEO // CHIEF FINANCIAL OFFICER</span>
+                        <h4 class="text-2xl font-bold text-arktos-navy mb-3">Timotheus</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed font-light mb-4">
+                            Mastermind of Gnáthos Tower banking operations, Timotheus supervises sovereign reserve accounts, bullion vault security, and multi-currency clearing systems.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-babyblue-200 text-[11px] font-mono text-slate-500 flex justify-between">
+                        <span>DIV: FINANCIAL SERVICES</span>
+                        <span class="text-sky-800 font-semibold">GNÁTHOS TOWER</span>
+                    </div>
+                </div>
+
+                <!-- CEO 2: Pareiá -->
+                <div class="glass-panel p-6 rounded-sm shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                    <div>
+                        <!-- Tailored Charcoal Suit Polar Bear SVG Portrait -->
+                        <div class="w-full h-52 mb-6 bg-gradient-to-b from-babyblue-50 to-babyblue-100/60 rounded-sm p-2 border border-babyblue-200 flex items-center justify-center overflow-hidden">
+                            <svg viewBox="0 0 200 220" class="w-full h-full">
+                                <!-- Ears -->
+                                <circle cx="55" cy="50" r="24" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/>
+                                <circle cx="55" cy="50" r="14" fill="#bae6fd"/>
+                                <circle cx="145" cy="50" r="24" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/>
+                                <circle cx="145" cy="50" r="14" fill="#bae6fd"/>
+                                <!-- Head -->
+                                <ellipse cx="100" cy="85" rx="55" ry="48" fill="#f8fafc" stroke="#cbd5e1" stroke-width="3"/>
+                                <!-- Snout -->
+                                <ellipse cx="100" cy="98" rx="22" ry="16" fill="#f1f5f9"/>
+                                <ellipse cx="100" cy="92" rx="10" ry="7" fill="#0284c7"/>
+                                <!-- Eyes -->
+                                <circle cx="80" cy="78" r="4" fill="#0f172a"/>
+                                <circle cx="120" cy="78" r="4" fill="#0f172a"/>
+                                <!-- Charcoal Suit with Pocket Square -->
+                                <path d="M 35 220 L 35 150 L 100 132 L 165 150 L 165 220 Z" fill="#1e293b"/>
+                                <path d="M 82 137 L 100 220 L 118 137 Z" fill="#ffffff"/> <!-- White Shirt -->
+                                <polygon points="100,138 107,175 100,205 93,175" fill="#0284c7"/> <!-- Deep Blue Tie -->
+                                <!-- Baby Blue Pocket Square -->
+                                <rect x="48" y="172" width="16" height="4" fill="#7dd3fc"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-mono text-sky-800 font-semibold uppercase tracking-wider block mb-1">CO-CEO // MOLECULAR DEFENSE DIRECTOR</span>
+                        <h4 class="text-2xl font-bold text-arktos-navy mb-3">Pareiá</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed font-light mb-4">
+                            Directs the Bio-Pharmaceutical Science division, overseeing "The Diggle" neuro-pathogen containment, viral engineering, and sub-zero lab safety.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-babyblue-200 text-[11px] font-mono text-slate-500 flex justify-between">
+                        <span>DIV: BIO-DEFENSE</span>
+                        <span class="text-sky-800 font-semibold">PROJECT DIGGLE</span>
+                    </div>
+                </div>
+
+                <!-- CEO 3: Arktos -->
+                <div class="glass-panel p-6 rounded-sm shadow-sm hover:shadow-md transition-all flex flex-col justify-between border-2 border-sky-400">
+                    <div>
+                        <!-- Tailored Tuxedo Polar Bear SVG Portrait -->
+                        <div class="w-full h-52 mb-6 bg-gradient-to-b from-babyblue-50 to-babyblue-100/60 rounded-sm p-2 border border-babyblue-300 flex items-center justify-center overflow-hidden">
+                            <svg viewBox="0 0 200 220" class="w-full h-full">
+                                <!-- Ears -->
+                                <circle cx="55" cy="50" r="24" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/>
+                                <circle cx="55" cy="50" r="14" fill="#bae6fd"/>
+                                <circle cx="145" cy="50" r="24" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/>
+                                <circle cx="145" cy="50" r="14" fill="#bae6fd"/>
+                                <!-- Head -->
+                                <ellipse cx="100" cy="85" rx="55" ry="48" fill="#f8fafc" stroke="#cbd5e1" stroke-width="3"/>
+                                <!-- Snout -->
+                                <ellipse cx="100" cy="98" rx="22" ry="16" fill="#f1f5f9"/>
+                                <ellipse cx="100" cy="92" rx="10" ry="7" fill="#0284c7"/>
+                                <!-- Eyes -->
+                                <circle cx="80" cy="78" r="4" fill="#0f172a"/>
+                                <circle cx="120" cy="78" r="4" fill="#0f172a"/>
+                                <!-- Founder Double-Breasted Suit -->
+                                <path d="M 35 220 L 35 150 L 100 132 L 165 150 L 165 220 Z" fill="#075985"/>
+                                <path d="M 85 137 L 100 220 L 115 137 Z" fill="#ffffff"/> <!-- White Shirt -->
+                                <!-- Baby Blue Bowtie -->
+                                <polygon points="90,142 100,147 90,152" fill="#38bdf8"/>
+                                <polygon points="110,142 100,147 110,152" fill="#38bdf8"/>
+                                <circle cx="100" cy="147" r="3" fill="#0284c7"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-mono text-sky-900 font-bold uppercase tracking-wider block mb-1">FOUNDER &amp; CHIEF EXECUTIVE</span>
+                        <h4 class="text-2xl font-bold text-arktos-navy mb-3">Arktos</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed font-light mb-4">
+                            Founder and senior strategist controlling global industrial manufacturing (French Fries, Marmalade, Marshmallows) and the Titan-Hoops basketball franchise.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-babyblue-200 text-[11px] font-mono text-slate-500 flex justify-between">
+                        <span>DIV: GLOBAL ENTERPRISE</span>
+                        <span class="text-sky-900 font-bold">FOUNDER SEAT</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 2: GNÁTHOS TOWER PRIVATE BANKING & FINANCE -->
+        <section id="banking" class="scroll-mt-28">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-2.5 h-6 bg-babyblue-500 rounded-full"></div>
+                <h2 class="text-xs font-mono uppercase tracking-widest text-sky-900 font-semibold">Institutional Financial Command</h2>
+            </div>
+            <h3 class="text-3xl md:text-4xl font-light text-arktos-navy mb-6">
+                Gnáthos Tower Wealth Matrix
+            </h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <!-- Main Banking Narrative -->
+                <div class="lg:col-span-7 glass-panel p-8 rounded-sm space-y-6">
+                    <p class="text-slate-700 text-sm md:text-base leading-relaxed">
+                        Anchored at the monolith <strong class="text-arktos-navy font-semibold">Gnáthos Tower</strong>, ARKTOS operates as the top-choice institutional bank for central reserves, sovereign wealth funds, and multinational corporations. 
+                    </p>
+                    <p class="text-slate-600 text-xs md:text-sm leading-relaxed font-light">
+                        Spanning 150 floors above ground and 40 fortified levels beneath, Gnáthos Tower provides quantum-encrypted liquidity clearing, zero-latency bullion transfer, and guaranteed high-yield escrow protocols under Timotheus's direct governance.
+                    </p>
+
+                    <!-- Interactive Sovereign Yield Calculator -->
+                    <div class="bg-white/90 p-6 border border-babyblue-200 rounded-sm space-y-5 shadow-sm">
+                        <div class="flex justify-between items-center border-b border-babyblue-200 pb-3">
+                            <span class="text-xs font-mono text-sky-900 font-bold uppercase">
+                                <i class="fas fa-calculator text-babyblue-500 mr-2"></i> Gnáthos Reserve Yield Calculator
+                            </span>
+                            <span class="text-[10px] font-mono bg-babyblue-100 text-sky-900 px-2 py-0.5 rounded">
+                                GUARANTEED RATE: 7.2% APY
+                            </span>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-mono mb-2">
+                                <span class="text-slate-600">Sovereign Deposit Principal:</span>
+                                <span id="deposit-val-text" class="font-bold text-arktos-navy">$500,000,000</span>
+                            </div>
+                            <input type="range" id="deposit-range" min="100000000" max="5000000000" step="100000000" value="500000000" 
+                                   class="w-full h-2 bg-babyblue-200 rounded-lg appearance-none cursor-pointer accent-sky-600"
+                                   oninput="updateYieldCalc(this.value)">
+                            <div class="flex justify-between text-[10px] font-mono text-slate-400 mt-1">
+                                <span>$100M</span>
+                                <span>$2.5B</span>
+                                <span>$5.0B</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 pt-3 border-t border-slate-200 text-xs font-mono">
+                            <div>
+                                <span class="text-slate-500 block">Annual Sovereign Return:</span>
+                                <span id="annual-yield-text" class="text-sky-900 font-bold text-base">$36,000,000</span>
+                            </div>
+                            <div>
+                                <span class="text-slate-500 block">Vault Security Clearance:</span>
+                                <span class="text-slate-900 font-bold text-sm">Gnáthos Sub-Level 40</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Banking Specs Sidebar -->
+                <div class="lg:col-span-5 glass-panel-dark text-white p-8 rounded-sm flex flex-col justify-between space-y-6">
+                    <div>
+                        <span class="text-xs font-mono text-babyblue-300 uppercase tracking-widest block mb-3">// GNÁTHOS TOWER SPECS</span>
+                        <h4 class="text-2xl font-light mb-4">Financial Infrastructure</h4>
+                        
+                        <ul class="space-y-4 text-xs font-mono text-slate-300">
+                            <li class="flex items-start gap-3">
+                                <i class="fas fa-shield-halved text-babyblue-400 mt-0.5"></i>
+                                <span><strong>Subterranean Vaults:</strong> Titanium-reinforced granite shield housing $18.4 Trillion in assets.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fas fa-bolt text-babyblue-400 mt-0.5"></i>
+                                <span><strong>Clearing Speed:</strong> Instantaneous inter-bank settlement via direct fiber linking key exchanges.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fas fa-building-columns text-babyblue-400 mt-0.5"></i>
+                                <span><strong>Sovereign Exemption:</strong> Independent regulatory charter enforced by ARKTOS Legal Corps.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="p-4 bg-slate-800/90 border border-slate-700 rounded text-xs font-mono flex items-center justify-between">
+                        <span class="text-slate-400">TIER-1 CAPITAL RATIO</span>
+                        <span class="text-babyblue-300 font-bold">48.2% (EXCEEDS ACCORD)</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 3: BIO-DEFENSE DIVISION - PROJECT DIGGLE -->
+        <section id="diggle" class="scroll-mt-28">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-2.5 h-6 bg-babyblue-500 rounded-full"></div>
+                <h2 class="text-xs font-mono uppercase tracking-widest text-sky-900 font-semibold">Molecular Bio-Defense Division</h2>
+            </div>
+            <h3 class="text-3xl md:text-4xl font-light text-arktos-navy mb-6">
+                Engineered Neuro-Agent: <span class="font-semibold text-slate-900">The Diggle</span>
+            </h3>
+
+            <div class="glass-panel p-8 md:p-10 rounded-sm space-y-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    
+                    <!-- Pathology Description -->
+                    <div class="lg:col-span-7 space-y-5">
+                        <div class="inline-block px-3 py-1 bg-babyblue-50 border border-babyblue-200 text-sky-900 text-xs font-mono uppercase font-semibold">
+                            BIO-VECTOR SPECIFICATION // STRAIN DIGGLE-X9
+                        </div>
+                        
+                        <p class="text-slate-700 text-sm md:text-base leading-relaxed">
+                            Formulated in Pareiá's sub-zero research facilities, <strong class="text-arktos-navy font-semibold">The Diggle</strong> is a hyper-targeted neuro-biological agent designed to paralyze tactical combat effectiveness without inducing permanent tissue necrosis.
+                        </p>
+
+                        <!-- Highlighted Symptom Box -->
+                        <div class="p-5 bg-white/95 border-l-4 border-babyblue-500 rounded-r-sm shadow-sm space-y-2">
+                            <div class="flex items-center text-xs font-mono text-sky-950 font-bold uppercase">
+                                <i class="fas fa-triangle-exclamation text-sky-600 mr-2"></i> Clinical Physiological Pathology
+                            </div>
+                            <p class="text-xs text-slate-700 leading-relaxed font-mono">
+                                Upon exposure to <em class="text-sky-900 font-bold">The Diggle</em>, the subject's spinal motor neurons experience rapid-fire accessory nerve impulses. This causes <strong class="text-slate-900 bg-babyblue-100 px-1 py-0.5">the infected host to rapidly and violently move their shoulders up and down nonstop</strong> in an intense, involuntary shrugging spasm.
+                            </p>
+                        </div>
+
+                        <p class="text-slate-600 text-xs leading-relaxed font-light">
+                            Because the host's shoulders twitch upwards and downwards incessantly at high speeds, targets become completely unable to stabilize equipment, aim firearms, or maintain physical balance.
+                        </p>
+
+                        <!-- Controls to change twitch animation rate -->
+                        <div class="pt-4 border-t border-babyblue-200 space-y-3">
+                            <span class="text-xs font-mono text-slate-500 uppercase block">Telemetry Controller — Adjust Involuntary Twitch Velocity:</span>
+                            <div class="flex flex-wrap items-center gap-3">
+                                <button onclick="setTwitchSeverity('stage1')" class="px-3 py-1.5 bg-white border border-babyblue-300 rounded text-xs font-mono hover:bg-babyblue-50 active:scale-95 transition-all text-slate-800">
+                                    Stage 1 (Moderate Shrug)
+                                </button>
+                                <button onclick="setTwitchSeverity('stage3')" class="px-3 py-1.5 bg-sky-600 text-white rounded text-xs font-mono hover:bg-sky-700 active:scale-95 transition-all font-semibold shadow-sm">
+                                    Stage 3 (Rapid Nonstop Spasm)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Animated SVG Bear Specimen ("The Diggle Demo Body") -->
+                    <div class="lg:col-span-5 glass-panel-dark text-white p-6 rounded-sm border border-slate-700 flex flex-col items-center justify-center text-center">
+                        <span class="text-[10px] font-mono text-babyblue-300 uppercase tracking-widest mb-2">
+                            // DEMO SPECIMEN: TEST SUBJECT #09 (BEAR MODEL)
+                        </span>
+
+                        <!-- Animated Bear Subject Showing Nonstop Rapid Shoulder Shrugging -->
+                        <div class="relative w-56 h-64 my-2 flex items-center justify-center">
+                            <svg id="diggle-bear-svg" viewBox="0 0 280 300" class="w-full h-full">
+                                
+                                <!-- Bear Legs -->
+                                <ellipse cx="100" cy="250" rx="22" ry="30" fill="#f8fafc" stroke="#cbd5e1" stroke-width="3"/>
+                                <ellipse cx="180" cy="250" rx="22" ry="30" fill="#f8fafc" stroke="#cbd5e1" stroke-width="3"/>
+                                <!-- Blue Striped Paws -->
+                                <path d="M 82 265 C 82 278, 118 278, 118 265" fill="none" stroke="#38bdf8" stroke-width="4"/>
+                                <path d="M 162 265 C 162 278, 198 278, 198 265" fill="none" stroke="#38bdf8" stroke-width="4"/>
+
+                                <!-- Torso -->
+                                <ellipse cx="140" cy="180" rx="60" ry="58" fill="#f8fafc" stroke="#cbd5e1" stroke-width="3"/>
+                                <!-- Baby Blue Shirt ("MY FIRST DIGGLE") -->
+                                <path d="M 88 140 Q 140 150 192 140 L 196 185 Q 140 198 84 185 Z" fill="#7dd3fc" stroke="#0284c7" stroke-width="2"/>
+                                <text x="140" y="168" text-anchor="middle" fill="#075985" font-size="9" font-family="monospace" font-weight="bold">PROJECT DIGGLE</text>
+
+                                <!-- Twitching Left Shoulder/Arm -->
+                                <g id="left-arm-group" class="twitch-active-left">
+                                    <ellipse cx="80" cy="160" rx="18" ry="38" fill="#f8fafc" stroke="#cbd5e1" stroke-width="3" transform="rotate(25 80 160)"/>
+                                    <rect x="50" y="170" width="18" height="12" fill="#ef4444" rx="2"/>
+                                    <text x="59" y="179" text-anchor="middle" fill="#fff" font-size="7" font-family="monospace">BIO</text>
+                                </g>
+
+                                <!-- Twitching Right Shoulder/Arm -->
+                                <g id="right-arm-group" class="twitch-active-right">
+                                    <ellipse cx="200" cy="160" rx="18" ry="38" fill="#f8fafc" stroke="#cbd5e1" stroke-width="3" transform="rotate(-25 200 160)"/>
+                                </g>
+
+                                <!-- Bear Head -->
+                                <circle cx="100" cy="65" r="20" fill="#f8fafc" stroke="#cbd5e1" stroke-width="3"/>
+                                <circle cx="100" cy="65" r="11" fill="#bae6fd"/>
+                                <circle cx="180" cy="65" r="20" fill="#f8fafc" stroke="#cbd5e1" stroke-width="3"/>
+                                <circle cx="180" cy="65" r="11" fill="#bae6fd"/>
+                                
+                                <ellipse cx="140" cy="95" rx="46" ry="40" fill="#f8fafc" stroke="#cbd5e1" stroke-width="3"/>
+                                <ellipse cx="140" cy="106" rx="18" ry="13" fill="#f1f5f9"/>
+                                <ellipse cx="140" cy="100" rx="9" ry="6" fill="#0284c7"/>
+                                
+                                <circle cx="123" cy="88" r="3.5" fill="#0f172a"/>
+                                <circle cx="157" cy="88" r="3.5" fill="#0f172a"/>
+                            </svg>
+                        </div>
+
+                        <div class="mt-2 px-3 py-1 bg-slate-800 border border-slate-700 rounded text-[11px] font-mono text-babyblue-300">
+                            PATHOLOGY: <span id="twitch-status-text" class="text-sky-300 font-bold">NONSTOP RAPID SHOULDER TWITCHING</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: DIVERSIFIED INDUSTRIAL MANUFACTURING -->
+        <section id="manufacturing" class="scroll-mt-28">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-2.5 h-6 bg-babyblue-500 rounded-full"></div>
+                <h2 class="text-xs font-mono uppercase tracking-widest text-sky-900 font-semibold">Global Production Operations</h2>
+            </div>
+            <h3 class="text-3xl md:text-4xl font-light text-arktos-navy mb-4">
+                Industrial Manufacturing Division
+            </h3>
+            <p class="text-sm text-slate-600 max-w-2xl font-light mb-10">
+                Managed directly under Founder Arktos, our manufacturing plants integrate automated mass production across agricultural food processing, cryogenic fry preparation, and specialized confections.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- French Fries ("Chips") -->
+                <div class="glass-panel p-6 rounded-sm shadow-sm hover:border-babyblue-400 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-full bg-babyblue-50 border border-babyblue-200 flex items-center justify-center text-sky-800 mb-5 text-xl">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <span class="text-xs font-mono text-sky-800 font-semibold uppercase block mb-1">// POTATO PROCESSING MATRIX</span>
+                        <h4 class="text-xl font-bold text-arktos-navy mb-3">French Fries ("Chips") Division</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                            Mass production of premium golden French fries. Utilizing automated hydro-cutting technology, cryogenic flash-freezing, and seasoned crisping agents to supply quick-service restaurant chains worldwide.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-babyblue-200 text-[10px] font-mono text-slate-500 flex justify-between">
+                        <span>CAPACITY: 12K TONS/HR</span>
+                        <span class="text-sky-800 font-semibold">FLASH-FROZEN</span>
+                    </div>
+                </div>
+
+                <!-- Synthetic & Artisanal Marmalade -->
+                <div class="glass-panel p-6 rounded-sm shadow-sm hover:border-babyblue-400 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-full bg-babyblue-50 border border-babyblue-200 flex items-center justify-center text-sky-800 mb-5 text-xl">
+                            <i class="fas fa-jar"></i>
+                        </div>
+                        <span class="text-xs font-mono text-sky-800 font-semibold uppercase block mb-1">// CITRUS PRESERVES</span>
+                        <h4 class="text-xl font-bold text-arktos-navy mb-3">Marmalade Manufacturing</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                            Refinement of Seville orange rinds, high-density pectin, and natural preserves for commercial breakfast distribution, survival rations, and global culinary supply chains.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-babyblue-200 text-[10px] font-mono text-slate-500 flex justify-between">
+                        <span>PURITY: 99.8%</span>
+                        <span class="text-sky-800 font-semibold">GRADE-A PRESERVES</span>
+                    </div>
+                </div>
+
+                <!-- Tactical Marshmallows -->
+                <div class="glass-panel p-6 rounded-sm shadow-sm hover:border-babyblue-400 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-full bg-babyblue-50 border border-babyblue-200 flex items-center justify-center text-sky-800 mb-5 text-xl">
+                            <i class="fas fa-cubes"></i>
+                        </div>
+                        <span class="text-xs font-mono text-sky-800 font-semibold uppercase block mb-1">// CONFECTIONERY FABRICATION</span>
+                        <h4 class="text-xl font-bold text-arktos-navy mb-3">Tactical Marshmallow Production</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                            High-density marshmallow formulations engineered for maximum elastic shear strength, long shelf-life survival kits, and commercial confectionery s'mores manufacturing.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-babyblue-200 text-[10px] font-mono text-slate-500 flex justify-between">
+                        <span>ELASTICITY: CLASS-4</span>
+                        <span class="text-sky-800 font-semibold">HIGH DENSITY</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 5: BASKETBALL & ATHLETICS ENTERTAINMENT -->
+        <section id="athletics" class="scroll-mt-28">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-2.5 h-6 bg-babyblue-500 rounded-full"></div>
+                <h2 class="text-xs font-mono uppercase tracking-widest text-sky-900 font-semibold">Global Athletics Franchise</h2>
+            </div>
+
+            <div class="glass-panel p-8 md:p-10 rounded-sm border-l-4 border-l-babyblue-500">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div class="lg:col-span-8 space-y-4">
+                        <span class="text-xs font-mono text-sky-900 font-bold uppercase tracking-widest">// ARKTOS TITAN-HOOPS FRANCHISE</span>
+                        <h3 class="text-3xl font-light text-arktos-navy">
+                            Arktos Titan-Hoops League &amp; Arena Management
+                        </h3>
+                        <p class="text-slate-600 text-xs md:text-sm leading-relaxed font-light">
+                            Beyond finance and manufacturing, ARKTOS owns premier basketball franchises, state-of-the-art arenas at Gnáthos Center, and sports broadcasting rights. Combining elite biometric training regimes with sports entertainment.
+                        </p>
+                        <div class="flex flex-wrap gap-4 text-xs font-mono pt-2">
+                            <span class="px-3 py-1 bg-white border border-babyblue-300 rounded text-sky-900 font-semibold">
+                                <i class="fas fa-trophy text-babyblue-500 mr-1.5"></i> 5x League Champions
+                            </span>
+                            <span class="px-3 py-1 bg-white border border-babyblue-300 rounded text-slate-700">
+                                <i class="fas fa-users text-babyblue-500 mr-1.5"></i> 22,000 Seat Arena
+                            </span>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-4 bg-gradient-to-b from-white to-babyblue-50 p-6 border border-babyblue-200 rounded-sm text-center shadow-sm">
+                        <div class="w-16 h-16 mx-auto rounded-full bg-babyblue-100 flex items-center justify-center text-sky-700 text-3xl mb-3">
+                            <i class="fas fa-basketball-ball"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-arktos-navy">TITAN-HOOPS</h4>
+                        <span class="text-[11px] font-mono text-slate-500 block mb-3">100% ARKTOS OWNERSHIP</span>
+                        <span class="text-xs font-mono bg-babyblue-500 text-white px-3 py-1 rounded">GLOBAL SPORTS DIV</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: INVESTOR RELATIONS & COMPLIANCE -->
+        <section id="investors" class="scroll-mt-28">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-2.5 h-6 bg-babyblue-500 rounded-full"></div>
+                <h2 class="text-xs font-mono uppercase tracking-widest text-sky-900 font-semibold">Institutional Investor Portal</h2>
+            </div>
+            <h3 class="text-3xl font-light text-arktos-navy mb-8">
+                Gnáthos Tower Executive Access
+            </h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Contact Form -->
+                <div class="lg:col-span-7 glass-panel p-8 rounded-sm">
+                    <form onsubmit="event.preventDefault(); handlePortalSubmit();" class="space-y-4">
+                        <span class="text-xs font-mono text-slate-500 uppercase block mb-2">// ENCRYPTED TRANSMISSION TO TRI-CEO COUNCIL</span>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-mono text-slate-700 mb-1">Entity / Sovereign Name</label>
+                                <input type="text" required placeholder="e.g., Apex Capital Corp" class="w-full px-3 py-2 bg-white border border-babyblue-300 rounded text-xs focus:outline-none focus:border-babyblue-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-mono text-slate-700 mb-1">Clearance Protocol</label>
+                                <select class="w-full px-3 py-2 bg-white border border-babyblue-300 rounded text-xs focus:outline-none focus:border-babyblue-500">
+                                    <option>Gnáthos Banking Inquiry</option>
+                                    <option>Project Diggle Containment Licensing</option>
+                                    <option>French Fry / Food Distribution Contract</option>
+                                    <option>Basketball Franchise Sponsorship</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-mono text-slate-700 mb-1">Secure Message Payload</label>
+                            <textarea rows="4" required placeholder="Detail your institutional inquiry..." class="w-full px-3 py-2 bg-white border border-babyblue-300 rounded text-xs focus:outline-none focus:border-babyblue-500"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full py-2.5 bg-arktos-navy text-white text-xs font-mono font-semibold rounded hover:bg-slate-800 transition-colors shadow-sm">
+                            TRANSMIT TO GNÁTHOS TOWER
+                        </button>
+                    </form>
+                    <div id="form-feedback" class="hidden mt-4 p-3 bg-babyblue-50 border border-babyblue-300 rounded text-xs font-mono text-sky-900">
+                        <i class="fas fa-check-circle text-sky-600 mr-2"></i> Transmission logged. Clearance response routed via Gnáthos Tower relay.
+                    </div>
+                </div>
+
+                <!-- Legal / Sovereign Disclaimers -->
+                <div class="lg:col-span-5 glass-panel p-8 rounded-sm space-y-4 text-xs font-mono text-slate-600">
+                    <span class="text-xs font-mono text-sky-900 font-bold uppercase block">// LEGAL &amp; GOVERNANCE</span>
+                    <p class="leading-relaxed">
+                        ARKTOS Global Enterprises operates under sovereign corporate charter. Asset custody at Gnáthos Tower is protected against external seizure under international multilateral treaties.
+                    </p>
+                    <p class="leading-relaxed">
+                        Research regarding "The Diggle" is strictly restricted to Level-5 authorized laboratories. Unauthorized dissemination of biological vectors is strictly prohibited.
+                    </p>
+                    <div class="pt-4 border-t border-babyblue-200 text-[11px] text-slate-400">
+                        TRI-CEO SIGN-OFF: TIMOTHEUS | PAREIÁ | ARKTOS
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 glass-panel border-t border-babyblue-200 py-10 px-6 md:px-12 text-xs font-mono text-slate-600">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-3">
+                <svg width="140" height="22" viewBox="0 0 280 45" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-5 w-auto">
+                    <g fill="#0F172A">
+                        <path d="M 0 42 L 0 10 L 10 0 L 32 0 L 42 10 L 42 42 L 30 42 L 30 26 L 12 26 L 12 42 Z M 12 16 L 30 16 L 30 10 L 12 10 Z" />
+                        <path d="M 46 42 L 46 0 L 78 0 L 88 10 L 88 22 L 76 26 L 88 42 L 74 42 L 64 26 L 58 26 L 58 42 Z M 58 16 L 74 16 L 74 10 L 58 10 Z" />
+                        <path d="M 92 42 L 92 0 L 104 0 L 104 16 L 122 0 L 136 0 L 118 18 L 136 42 L 122 42 L 104 22 L 104 42 Z" />
+                        <path d="M 140 10 L 140 0 L 180 0 L 180 10 L 166 10 L 166 42 L 154 42 L 154 10 Z" />
+                        <path d="M 162 -2 L 170 -8 L 176 -8 L 170 -2 Z" fill="#0284C7"/>
+                        <path d="M 184 10 L 194 0 L 216 0 L 226 10 L 226 32 L 216 42 L 194 42 L 184 32 Z M 196 32 L 214 32 L 214 10 L 196 10 Z" />
+                        <path d="M 230 32 L 240 42 L 272 42 L 272 24 L 242 24 L 242 10 L 272 10 L 272 0 L 230 0 L 230 18 L 260 18 L 260 32 Z" />
+                    </g>
+                </svg>
+                <span>&copy; 2026 ARKTOS Megacorporation. All Rights Reserved.</span>
+            </div>
+            <div class="flex gap-6 text-[11px]">
+                <span>GNÁTHOS TOWER HEADQUARTERS</span>
+                <span>PROJECT DIGGLE DEFENSE</span>
+                <span>TITAN-HOOPS</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Dynamic Canvas Script for Baby Blue Scroll Motion -->
     <script>
-        // Initialize js-dos and boot the stable Doom bundle
-        Dos(document.getElementById("doom-container"), {
-            url: "https://v8.js-dos.com/bundles/doom.jsdos",
-            autostart: true
-        });
-    </script>
+        const canvas = document.getElementById('scroll-canvas');
+        const ctx = canvas.getContext('2d');
 
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        let scrollY = window.scrollY;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        window.addEventListener('scroll', () => {
+            scrollY = window.scrollY;
+        });
+
+        // Floating ambient blue geometric particles
+        const particles = [];
+        for (let i = 0; i < 50; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                baseY: Math.random() * height,
+                size: Math.random() * 3 + 1,
+                speed: Math.random() * 0.4 + 0.15
+            });
+        }
+
+        function drawScrollCanvas() {
+            ctx.clearRect(0, 0, width, height);
+
+            // Light Baby Blue dynamic background gradient
+            const grad = ctx.createLinearGradient(0, 0, 0, height);
+            grad.addColorStop(0, '#f0f9ff');
+            grad.addColorStop(0.5, '#e0f2fe');
+            grad.addColorStop(1, '#bae6fd');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, width, height);
+
+            // Grid lines shifting continuously with scroll position
+            const gridSpacing = 65;
+            const scrollOffset = (scrollY * 0.35) % gridSpacing;
+
+            ctx.strokeStyle = 'rgba(125, 211, 252, 0.3)';
+            ctx.lineWidth = 1;
+
+            // Vertical lines
+            for (let x = 0; x < width; x += gridSpacing) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+                ctx.stroke();
+            }
+
+            // Horizontal moving lines tied to scroll
+            for (let y = -gridSpacing + scrollOffset; y < height; y += gridSpacing) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+
+            // Render particles that float gently relative to scroll
+            particles.forEach(p => {
+                let currentY = (p.baseY - scrollY * p.speed) % height;
+                if (currentY < 0) currentY += height;
+
+                ctx.fillStyle = 'rgba(2, 132, 199, 0.22)';
+                ctx.beginPath();
+                ctx.arc(p.x, currentY, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            requestAnimationFrame(drawScrollCanvas);
+        }
+
+        drawScrollCanvas();
+
+        // Control the Shoulder Twitch speed for The Diggle Demo Body
+        function setTwitchSeverity(stage) {
+            const leftArm = document.getElementById('left-arm-group');
+            const rightArm = document.getElementById('right-arm-group');
+            const statusText = document.getElementById('twitch-status-text');
+
+            if (stage === 'stage1') {
+                leftArm.style.setProperty('--twitch-speed', '0.35s');
+                rightArm.style.setProperty('--twitch-speed', '0.38s');
+                statusText.textContent = "STAGE 1: MODERATE SHOULDER SHRUG";
+            } else if (stage === 'stage3') {
+                leftArm.style.setProperty('--twitch-speed', '0.12s');
+                rightArm.style.setProperty('--twitch-speed', '0.13s');
+                statusText.textContent = "STAGE 3: RAPID NONSTOP SHOULDER SPASM";
+            }
+        }
+
+        // Financial Yield Calculator
+        function updateYieldCalc(val) {
+            const amount = parseInt(val);
+            document.getElementById('deposit-val-text').textContent = "$" + amount.toLocaleString();
+            const yieldAmt = amount * 0.072;
+            document.getElementById('annual-yield-text').textContent = "$" + yieldAmt.toLocaleString();
+        }
+
+        // Form handler
+        function handlePortalSubmit() {
+            const feedback = document.getElementById('form-feedback');
+            feedback.classList.remove('hidden');
+        }
+    </script>
 </body>
 </html>
